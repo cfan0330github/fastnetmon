@@ -10,6 +10,10 @@
 #  $2 data_direction
 #  $3 pps_as_string
 #  $4 action (ban or unban)
+#  
+#  2015-07-22  change ban func.    cfan0330@gmail.com
+#
+#
 
 email_notify="root,please_fix_this_email@domain.ru"
 banok="success"
@@ -17,7 +21,7 @@ banok="success"
 # Please be carefult! You should not remove cat >
 #
 
-if [ "$4" = "unban" ]; then
+if [ "$4" == "unban" ]; then
     # No details arrived to stdin here
 
     # Unban actions if used
@@ -34,7 +38,7 @@ fi
 # FastNetMon will crash in this case (it expect read of data from script side).
 #
 
-if [ "$4" = "ban" ]; then
+if [ "$4" == "ban" ]; then
 #    cat | mail -s "FastNetMon Guard: IP $1 blocked because $2 attack with power $3 pps" $email_notify;
     # You can add ban code here!
     exit 0
@@ -77,7 +81,7 @@ if [ "$4" == "attack_details" ]; then
                         send "ip route $B_ip 255.255.255.255 Null0\n"
         }
         expect -re "#" {send "exit\n"}
-        expect -re "#" {send "show ip route static | i $B_ip\n"}
+        expect -re "#" {send "show ip route static | i $B_ip/32\n"}
         expect -re "Null0"
         set results $expect_out(buffer)
         puts $results
